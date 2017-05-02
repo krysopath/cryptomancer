@@ -1,1 +1,1 @@
-from .gpg import GPG
+from .gpg import GPG, __defaultkey__
