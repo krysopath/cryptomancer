@@ -21,7 +21,7 @@ class GPG:
         #print('init gpg for', home)
         self.vers = gnupg.__version__
         self.homedir = home
-        if self.vers == '2.0.2':
+        if self.vers in ['2.0.2', '2.0.2-py3.4.egg']:
             self.gpg = gnupg.GPG(
                 homedir=self.homedir)
         elif self.vers == '0.3.6':
