@@ -4,7 +4,7 @@
 from setuptools import setup
 setup(
     name='safe',
-    version='0.1.0',
+    version='0.1.1',
     description='safe module, contains crypto related helpers',
     author='Georg',
     author_email='krysopath@gmail.com',

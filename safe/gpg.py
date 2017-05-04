@@ -18,7 +18,7 @@ __defaultkey__ = {'expire_date': '0',
 
 class GPG:
     def __init__(self, home, opts=None):
-        #print('init gpg for', home)
+        #print(' +++ init gpg for', home)
         self.vers = gnupg.__version__
         self.homedir = home
         if self.vers in ['2.0.2', '2.0.2-py3.4.egg']:
@@ -29,15 +29,15 @@ class GPG:
                 gnupghome=self.homedir)
         else:
             raise ImportError(
-                'unhandled gpg version: ' + self.vers
+                ' --- unhandled gpg version: ' + self.vers
             )
         self.gpg.encoding = 'utf-8'
 
     def __make_a_new_key(self, keyinfo):
         pprint(keyinfo)
-        print('collecting entropy...')
+        print(' +++ collecting entropy...')
         key = self.gpg.gen_key(keyinfo)
-        print('key finished', key.fingerprint)
+        print(' +++ key finished', key.fingerprint)
         return key
 
     def new_key(self, keyopts):
@@ -57,25 +57,26 @@ class GPG:
     def keys(self):
         return self.gpg.list_keys()
 
-    def encrypt(self, msg, recievers):
+    def encrypt(self, msg, recievers, signer=None, signer_pass=None, symmetric=False, trust=False):
         try:
             assert isinstance(msg, str)
-            return self.gpg.encrypt(
+            result = self.gpg.encrypt(
                 msg,
-                recievers
+                *recievers,
+                default_key=signer,
+                passphrase=signer_pass,
+                symmetric=symmetric,
+                always_trust=trust
             )
-        except AssertionError:
-            return False
 
-    def encrypt_file(self, infile):
-        try:
-            # assert isinstance(infile, file)
-            return self.gpg.encrypt_file(
-                infile,
-                self.key
-            )
         except AssertionError:
             return False
+        try:
+            assert result
+        except AssertionError:
+            print(result)
+
+        return result
 
     def decrypt(self, msg):
         return self.gpg.decrypt(
