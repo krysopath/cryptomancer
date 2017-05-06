@@ -3,12 +3,12 @@
 
 from setuptools import setup
 setup(
-    name='safe',
+    name='cryptomancer',
     version='0.1.1',
-    description='safe module, contains crypto related helpers',
+    description='cryptomancer module, contains crypto related helpers',
     author='Georg',
     author_email='krysopath@gmail.com',
-    url='ssh://git@endtropie.mooo.com:22222/home/git/safe.git',
-    packages=['safe'],
+    url='ssh://git@endtropie.mooo.com:22222/home/git/cryptomancer.git',
+    packages=['cryptomancer'],
     install_requires=['gnupg']
 )

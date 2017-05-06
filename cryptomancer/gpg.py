@@ -2,7 +2,11 @@
 # coding=utf-8
 from pprint import pprint
 
-import gnupg
+try:
+    from . import gnupg as gnupg
+except ImportError:
+    print(' !!! loading sys gnupg module')
+    import gnupg
 
 __defaultkey__ = {'expire_date': '0',
                   'subkey_usage': 'encrypt,sign,auth',
@@ -21,12 +25,15 @@ class GPG:
         #print(' +++ init gpg for', home)
         self.vers = gnupg.__version__
         self.homedir = home
-        if self.vers in ['2.0.2', '2.0.2-py3.4.egg', '2.3.0-py3.4.egg']:
+        if self.vers in ['2.0.2', '2.0.2-py3.4.egg', '2.3.0-py3.4.egg', 'unknown']:
             self.gpg = gnupg.GPG(
-                homedir=self.homedir)
+                homedir=self.homedir,
+                #no_tty=False,
+            )
         elif self.vers == '0.3.6':
             self.gpg = gnupg.GPG(
-                gnupghome=self.homedir)
+                gnupghome=self.homedir,
+            )
         else:
             raise ImportError(
                 ' --- unhandled gpg version: ' + self.vers
@@ -57,7 +64,7 @@ class GPG:
     def keys(self):
         return self.gpg.list_keys()
 
-    def encrypt(self, msg, recievers, signer=None, signer_pass=None, symmetric=False, trust=False):
+    def encrypt(self, msg, recievers, signer=None, signer_pass=None, symmetric=False, trust=True):
         try:
             assert isinstance(msg, str)
             result = self.gpg.encrypt(
